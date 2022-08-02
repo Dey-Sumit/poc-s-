@@ -15,6 +15,7 @@ const containerVariants = {
     transition: {},
   },
 };
+
 const childrenVariants = {
   initial: {
     opacity: 0,
@@ -32,16 +33,18 @@ const childrenVariants = {
 
 const nextButtonVariants = {
   expand: {
-    clipPath: `circle(1400px at 320px 620px)`,
-    backgroundColor: "#fff",
+    clipPath: `circle(650px at 320px 620px)`,
+    backgroundColor: "#ffffff",
     transition: {
       duration: 0.7,
     },
   },
   collapse: {
     clipPath: `circle(30px at 320px 620px)`,
+    backgroundColor: "#ff5b91",
+
     transition: {
-      backgroundColor: "#ff5b91",
+      duration: 0.7,
     },
   },
 };
@@ -51,21 +54,19 @@ function App() {
   console.log({ currentSection, comingFromPersonalDetails });
   return (
     <div className="sm:w-[360px] w-screen relative sm:border-2 border-gray-300 mx-auto sm:h-[640px] h-full overflow-y-scroll sm:rounded-xl bg-white">
-      <expandPresence exitBeforeEnter>
-        {currentSection === "section1" ? (
-          <Section1
-            type="accordion1"
-            setCurrentSection={setCurrentSection}
-            comingFromPersonalDetails={comingFromPersonalDetails}
-          />
-        ) : (
-          <Section2
-            type="accordion2"
-            setCurrentSection={setCurrentSection}
-            handleBack={() => setComingFromPersonalDetails(true)}
-          />
-        )}
-      </expandPresence>
+      {currentSection === "section1" ? (
+        <Section1
+          type="accordion1"
+          setCurrentSection={setCurrentSection}
+          comingFromPersonalDetails={comingFromPersonalDetails}
+        />
+      ) : (
+        <Section2
+          type="accordion2"
+          setCurrentSection={setCurrentSection}
+          handleBack={() => setComingFromPersonalDetails(true)}
+        />
+      )}
     </div>
   );
 }
@@ -94,10 +95,14 @@ const Section1 = ({ type, setCurrentSection }) => {
         className=" bg-red-500 absolute bottom-6 right-0 h-full w-full z-50"
         variants={nextButtonVariants}
         // initial={false}
-        initial="expand"
-        // animate={isCollapsed ? "expand" : "collapse"}
-        animate="collapse"
-        onAnimationComplete={() => setCurrentSection("section2")}
+        // initial="expand"
+        initial={isCollapsed ? "collapse" : "expand"}
+        animate={isCollapsed ? "expand" : "collapse"}
+        // animate="collapse"
+        onAnimationComplete={(name) => {
+          if (name === "collapse") return;
+          setCurrentSection("section2");
+        }}
         onClick={() => {
           setCollapsed(true);
         }}
